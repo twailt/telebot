@@ -53,6 +53,7 @@ def main():
     search_term = input("Введіть слово для пошуку: ")
     get_search_results(search_term)
 
+
 if __name__ == '__main__':
     main()
 
