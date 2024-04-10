@@ -1,60 +1,60 @@
-# import requests
-# from bs4 import BeautifulSoup as bs
-# import time
+import requests
+from bs4 import BeautifulSoup as bs
+import time
 
-# def get_search_results(search_term):
-#     base_url = "https://rezka.ag/search/?do=search&subaction=search&q="
-#     headers = {
-#         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-#     }
-#     data = {
-#         'q': search_term,
-#         'scf': 'fx',
-#         'search_start': 0,
-#         'do': 'search',
-#         'subaction': 'search',
-#         'years_ot': 1902,
-#         'years_do': 2024,
-#         'kpi_ot': 1,
-#         'kpi_do': 10,
-#         'imdb_ot': 1,
-#         'imdb_do': 10,
-#         'sort_name': '',
-#         'undefined': 'asc',
-#         'sort_date': '',
-#         'sort_favorite': '',
-#         'simple': 1
-#     }
+def get_search_results(search_term):
+    base_url = "https://rezka.ag/search/?do=search&subaction=search&q="
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    data = {
+        'q': search_term,
+        'scf': 'fx',
+        'search_start': 0,
+        'do': 'search',
+        'subaction': 'search',
+        'years_ot': 1902,
+        'years_do': 2024,
+        'kpi_ot': 1,
+        'kpi_do': 10,
+        'imdb_ot': 1,
+        'imdb_do': 10,
+        'sort_name': '',
+        'undefined': 'asc',
+        'sort_date': '',
+        'sort_favorite': '',
+        'simple': 1
+    }
 
-#     response = requests.post(base_url, headers=headers, data=data)
-#     soup = bs(response.text, 'html.parser')
+    response = requests.post(base_url, headers=headers, data=data)
+    soup = bs(response.text, 'html.parser')
 
-#     navigation_div = soup.find("div", class_="b-navigation")
-#     if navigation_div:
-#         page_count = navigation_div.find_all("a")[-2].text
-#         for i in range(1, int(page_count) + 1):
-#             url = f"https://rezka.ag/search/?do=search&subaction=search&q={search_term}&page={i}"
-#             r = requests.get(url=url, headers=headers)
-#             soup_page = bs(r.text, 'html.parser')  # Парсим новую страницу
+    navigation_div = soup.find("div", class_="b-navigation")
+    if navigation_div:
+        page_count = navigation_div.find_all("a")[-2].text
+        for i in range(1, int(page_count) + 1):
+            url = f"https://rezka.ag/search/?do=search&subaction=search&q={search_term}&page={i}"
+            r = requests.get(url=url, headers=headers)
+            soup_page = bs(r.text, 'html.parser') 
 
-#             all_films = soup_page.find("div", class_="b-content__inline_items")
-#             new_list = [str(i) for i in all_films]
+            all_films = soup_page.find("div", class_="b-content__inline_items")
+            new_list = [str(i) for i in all_films]
 
-#             with open(f"ukr_net_links{i}.html", "w") as file:
-#                 for item in new_list:
-#                     file.write("\n" + item)
+            with open(f"ukr_net_links{i}.html", "w") as file:
+                for item in new_list:
+                    file.write("\n" + item)
 
-#             time.sleep(2)
-#             print(new_list)
-#     else:
-#         print("Навігаційний блок не знайдено.")
+            time.sleep(2)
+            print(new_list)
+    else:
+        print("Навігаційний блок не знайдено.")
 
-# def main():
-#     search_term = input("Введіть слово для пошуку: ")
-#     get_search_results(search_term)
+def main():
+    search_term = input("Введіть слово для пошуку: ")
+    get_search_results(search_term)
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main()
 
 
 
