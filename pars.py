@@ -1,9 +1,8 @@
 import requests
 from bs4 import BeautifulSoup as bs
-import time
 
 def get_search_results(search_term):
-    base_url = "https://rezka.ag/search/?do=search&subaction=search&q="
+    base_url = "https://rezka.ag/search/"
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
@@ -32,30 +31,21 @@ def get_search_results(search_term):
     navigation_div = soup.find("div", class_="b-navigation")
     if navigation_div:
         page_count = navigation_div.find_all("a")[-2].text
+        all_links = []
         for i in range(1, int(page_count) + 1):
             url = f"https://rezka.ag/search/?do=search&subaction=search&q={search_term}&page={i}"
             r = requests.get(url=url, headers=headers)
             soup_page = bs(r.text, 'html.parser') 
 
-            all_films = soup_page.find("div", class_="b-content__inline_items")
-            new_list = [str(i) for i in all_films]
+            all_films = soup_page.find_all("div", class_="b-content__inline_item")
+            for film in all_films:
+                link = film.find("a")["href"]
+                all_links.append(link)
 
-            with open(f"ukr_net_links{i}.html", "w") as file:
-                for item in new_list:
-                    file.write("\n" + item)
-
-            time.sleep(2)
-            print(new_list)
+        return all_links
     else:
-        print("Навігаційний блок не знайдено.")
+        return []
 
-def main():
-    search_term = input("Введіть слово для пошуку: ")
-    get_search_results(search_term)
-
-
-if __name__ == '__main__':
-    main()
 
 
 

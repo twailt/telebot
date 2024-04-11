@@ -1,31 +1,29 @@
-import requests
-from bs4 import BeautifulSoup as bs
-import time
-from telebot import types, TeleBot
-from dotenv import load_dotenv, find_dotenv
 import os
+import time
+from telebot import TeleBot
+from dotenv import load_dotenv, find_dotenv
 from pars import get_search_results
 
 load_dotenv(find_dotenv())
 
 bot = TeleBot(os.getenv("TOKEN"))
 
-
-def parse_search_results(search_term):
-    get_search_results(search_term)
-
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
-    parse_search_results(message.text)
+    search_term = message.text
+    search_results = get_search_results(search_term)
     
-    # Далее можно отправить результаты парсинга в чат Telegram
-
-    # Пример: 
-    results = "Результаты для запроса '{}': ...".format(message.text)
-    bot.send_message(message.chat.id, results)
+    if search_results:
+        for result in search_results:
+            time.sleep(2)
+            bot.send_message(message.chat.id, result)
+    else:
+        bot.send_message(message.chat.id, "Ничего не найдено.")
 
 if __name__ == "__main__":
     bot.infinity_polling()
+
+
 
 
 
