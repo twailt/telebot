@@ -17,7 +17,7 @@ def handle_message(message, page=1):
     print(search_results)
     markup = InlineKeyboardMarkup()
 
-    button_data = json.dumps({"action": "load_more", "page": page + 1, "search_term": search_term})
+    button_data = json.dumps({"action": "load_more", "page": page + 1, "search_term": search_term}, ensure_ascii=False)
     button = InlineKeyboardButton("Load More", callback_data=button_data)
     markup.add(button)
 
