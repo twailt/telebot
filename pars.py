@@ -25,26 +25,19 @@ def get_search_results(search_term):
         'simple': 1
     }
 
-    response = requests.post(base_url, headers=headers, data=data)
-    soup = bs(response.text, 'html.parser')
+    all_links = []
+    url = f"https://rezka.ag/search/?do=search&subaction=search&q={search_term}&page=1"
+    r = requests.get(url=url, headers=headers)
+    soup_page = bs(r.text, 'html.parser') 
 
-    navigation_div = soup.find("div", class_="b-navigation")
-    if navigation_div:
-        page_count = navigation_div.find_all("a")[-2].text
-        all_links = []
-        for i in range(1, int(page_count) + 1):
-            url = f"https://rezka.ag/search/?do=search&subaction=search&q={search_term}&page={i}"
-            r = requests.get(url=url, headers=headers)
-            soup_page = bs(r.text, 'html.parser') 
+    all_films = soup_page.find_all("div", class_="b-content__inline_item")
 
-            all_films = soup_page.find_all("div", class_="b-content__inline_item")
-            for film in all_films:
-                link = film.find("a")["href"]
-                all_links.append(link)
 
-        return all_links
-    else:
-        return []
+    for film in all_films:
+        link = film.find("a")["href"]
+        all_links.append(link)
+
+    return all_links
 
 
 
