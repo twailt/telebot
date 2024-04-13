@@ -24,26 +24,6 @@ def start(message):
     markup.add(btn1, btn2)
     bot.send_message(message.chat.id, text="Select category", reply_markup=markup)
 
-# @bot.message_handler(func=lambda message: True)
-# def handle_message(message, page=1):
-#     search_term = message.text
-#     print(search_term)
-#     print(message)
-    
-#     search_results = get_search_results(search_term)
-#     # print(search_results)
-#     markup = InlineKeyboardMarkup()
-
-#     button_data = f'load_more|{page + 1}|{search_term}'
-#     button = InlineKeyboardButton("Load More", callback_data=button_data)
-#     markup.add(button)
-
-#     if search_results and len(search_results) > page - 1 and search_results[page - 1]:
-#         bot.send_message(message.chat.id, search_results[page - 1], reply_markup=markup)
-#     else:
-#         bot.send_message(message.chat.id, "Not Found... Please adjust your query and try again")
-        
-
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
     decoded_data = call.data.split('|')
